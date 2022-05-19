@@ -21,3 +21,4 @@ visitor
 Werkzeug
 WTForms
 wtforms[email]
+psycopg2-binary
