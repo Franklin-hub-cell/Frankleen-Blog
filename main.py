@@ -10,6 +10,7 @@ from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from sqlalchemy.exc import IntegrityError
 import os
+import re
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 ckeditor = CKEditor(app)
@@ -23,7 +24,10 @@ gravatar = Gravatar(app,
                     use_ssl=False,
                     base_url=None)
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL",  "sqlite:///blog.db")
+uri = os.environ.get("DATABASE_URL",  "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 login_manager = LoginManager()
